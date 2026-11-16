@@ -1,3 +1,3 @@
 RegisterNetEvent('vSync:toggle', function(boolean)
-    LocalPlayer.state.syncWeather = boolean
+    RenewedWeather.PlayerState.syncWeather = boolean
 end)

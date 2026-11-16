@@ -1,9 +1,9 @@
-local timeScale = GlobalState.timeScale
-local currentTime = GlobalState.currentTime
-local timeFrozen = GlobalState.freezeTime
-local playerState = LocalPlayer.state
+local timeScale = RenewedWeather.State.timeScale
+local currentTime = RenewedWeather.State.currentTime
+local timeFrozen = RenewedWeather.State.freezeTime
+local playerState = RenewedWeather.PlayerState
 
-AddStateBagChangeHandler('currentTime', 'global', function(_, _, value)
+RenewedWeather.onStateChange('currentTime', 'global', function(_, _, value)
     if value and next(value) then
 
         if playerState.syncWeather then
@@ -14,35 +14,34 @@ AddStateBagChangeHandler('currentTime', 'global', function(_, _, value)
     end
 end)
 
-AddStateBagChangeHandler('timeScale', 'global', function(_, _, value)
+RenewedWeather.onStateChange('timeScale', 'global', function(_, _, value)
     if value and type(value) == 'number' then
 
         if playerState.syncWeather then
-            NetworkOverrideClockMillisecondsPerGameMinute(value)
+            NetworkOverrideClockMillisecondsPerGameMinute(RenewedWeather.State.freezeTime and 99999999 or value)
         end
 
         timeScale = value
     end
 end)
 
-AddStateBagChangeHandler('freezeTime', 'global', function(_, _, value)
+RenewedWeather.onStateChange('freezeTime', 'global', function(_, _, value)
     if playerState.syncWeather then
-        NetworkOverrideClockMillisecondsPerGameMinute(value and 99999999 or timeScale)
+        NetworkOverrideClockMillisecondsPerGameMinute(value and 99999999 or RenewedWeather.State.timeScale)
     end
 
     timeFrozen = value
 end)
 
 NetworkOverrideClockMillisecondsPerGameMinute(timeFrozen and 99999999 or timeScale)
+NetworkOverrideClockTime(currentTime.hour,currentTime.minute,0)
 
-AddStateBagChangeHandler('syncWeather', ('player:%s'):format(cache.serverId), function(_, _, value)
+RenewedWeather.onStateChange('syncWeather', ('player:%s'):format(pr_lib.cache.serverId), function(_, _, value)
     if value then
         NetworkOverrideClockTime(currentTime.hour, currentTime.minute, 0)
-        if not timeFrozen then
-            NetworkOverrideClockMillisecondsPerGameMinute(timeScale)
-        end
+        NetworkOverrideClockMillisecondsPerGameMinute(timeFrozen and 99999999 or timeScale)
     else
         NetworkOverrideClockMillisecondsPerGameMinute(99999999)
-        NetworkOverrideClockTime(21, 0, 0)
+        NetworkOverrideClockTime(0, 0, 0)
     end
 end)

@@ -5,7 +5,16 @@
 ---@field windSpeed? number
 ---@field windDirection? number
 ---@field isRain boolean
-local weather_class = lib.class('renewed_weather')
+local weather_class = {}
+weather_class.__index = weather_class
+
+setmetatable(weather_class, {
+    __call = function(_, payload)
+        local instance = setmetatable({}, weather_class)
+        instance:constructor(payload)
+        return instance
+    end,
+})
 
 ---@class renewed_weather_payload
 ---@field weather string

@@ -1,6 +1,6 @@
-local Config = lib.load('config.weather')
+local ConfigService = RenewedWeather.ConfigService
 
-local globalState = GlobalState
+local globalState = RenewedWeather.State
 
 local function exportHandler(exportName, func)
     AddEventHandler(('__cfx_export_qb-weathersync_%s'):format(exportName), function(setCB)
@@ -9,26 +9,20 @@ local function exportHandler(exportName, func)
 end
 
 exportHandler('nextWeatherStage', function()
-    return print("RENEWED WEATHERSYNC - THIS EXPORT IS NOT SUPPORTED (nextWeatherStage)")
+    return print("RENEWED WEATHERSYNC - THIS EXPORT IS NOT SUPPORTED")
 end)
 
 exportHandler('setDynamicWeather', function()
-    return print("RENEWED WEATHERSYNC - THIS EXPORT IS NOT SUPPORTED (setDynamicWeather)")
+    return print("RENEWED WEATHERSYNC - THIS EXPORT IS NOT SUPPORTED")
 end)
 
 
 exportHandler('setWeather', function(weather)
-    globalState.weather = {
-        weather = weather,
-        time = 9999999999
-    }
+    return RenewedWeather.WeatherService.force(weather)
 end)
 
 exportHandler('setTime', function(hour, minute)
-    globalState.currentTime = {
-        hour = hour,
-        minute = minute,
-    }
+    return RenewedWeather.TimeService.set(hour,minute,true,true)
 end)
 
 exportHandler('setBlackout', function(state)
@@ -36,7 +30,7 @@ exportHandler('setBlackout', function(state)
 end)
 
 exportHandler('setTimeFreeze', function(state)
-    globalState.freezeTime = state
+    return RenewedWeather.TimeService.freeze(state)
 end)
 
 exportHandler('getBlackoutState', function()
@@ -48,11 +42,12 @@ exportHandler('getTimeFreezeState', function()
 end)
 
 exportHandler('getWeatherState', function()
-    return globalState.weather?.weather
+    local current = globalState.weather
+    return current and current.weather or nil
 end)
 
 exportHandler('getDynamicWeather', function()
-    return Config.useWeatherSequences
+    return ConfigService.getWeather().mode ~= 'daily_fixed'
 end)
 
 exportHandler('getTime', function()
@@ -65,18 +60,12 @@ RegisterNetEvent('qb-weathersync:server:setWeather', function(weather)
     if not IsPlayerAceAllowed(source, 'command.weather') then
         return
     end
-    globalState.weather = {
-        weather = weather,
-        time = 9999999999
-    }
+    return RenewedWeather.WeatherService.force(weather)
 end)
 
 RegisterNetEvent('qb-weathersync:server:setTime', function(hour, minute)
     if not IsPlayerAceAllowed(source, 'command.time') then
         return
     end
-    globalState.currentTime = {
-        hour = tonumber(hour),
-        minute = tonumber(minute) or 0,
-     }
+    return RenewedWeather.TimeService.set(hour,minute,true,true)
 end)

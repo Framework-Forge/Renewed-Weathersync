@@ -1,5 +1,5 @@
 if GetResourceState('qb-core') == 'missing' and GetResourceState('qbx_core') == 'missing' then return end
-local playerState = LocalPlayer.state
+local playerState = RenewedWeather.PlayerState
 
 RegisterNetEvent('qb-weathersync:client:DisableSync', function()
     playerState.syncWeather = false
