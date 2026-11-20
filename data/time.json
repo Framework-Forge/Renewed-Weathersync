@@ -1,1 +1,1 @@
-{"freezeTime":false,"useRealTime":true,"schemaVersion":2,"nightTime":{"beginning":22,"ending":6},"daySecondsPerMinute":4,"defaultSecondsPerMinute":2,"useScalableTime":false,"startUpTime":{"minute":0,"hour":12},"nightSecondsPerMinute":8.0}
+{"startUpTime":{"hour":12,"minute":0},"daySecondsPerMinute":4,"defaultSecondsPerMinute":2,"useScalableTime":false,"freezeTime":false,"nightTime":{"beginning":22,"ending":6},"schemaVersion":2,"useRealTime":true,"nightSecondsPerMinute":8.0}

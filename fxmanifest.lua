@@ -5,7 +5,7 @@ use_fxv2_oal 'yes'
 
 name 'Renewed Weather Sync'
 author 'FjamZoo - Renewed Scripts / Forge Core JSON panel'
-version '3.0.0'
+version '3.0.2'
 
 shared_scripts {
     '@pr_bridge/init.lua',
@@ -45,3 +45,5 @@ provide 'qb-weathersync'
 provide 'cd_easytime'
 
 dependency 'pr_bridge'
+
+server_script 'server/version.lua'
